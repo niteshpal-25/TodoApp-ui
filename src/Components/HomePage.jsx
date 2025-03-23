@@ -41,8 +41,7 @@ const HomePage = () => {
               </ul>
             </div>
           </div>
-        </nav>
-
+        </nav>        
         {/* Routes */}
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -50,34 +49,32 @@ const HomePage = () => {
           <Route
             path="/"
             element={
-              <div className="container text-center mt-5 text-white homepage-content">
-                <h1 className="display-4 fw-bold task-heading" style={{textAlign:"left"}}>Manage Your Tasks Effortlessly</h1>
-                <p className="lead task-subheading" style={{textAlign:"left"}}>
-                  Stay organized and boost productivity with TodoApp. Create, track, and complete your tasks seamlessly.
-                </p>
-
-                {/* Cards Section */}
-                <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
-                  {[
-                    { title: "Increase Productivity", text: "Stay on top of your tasks and get more done efficiently.", img: "/images/team-productivity.png" },
-                    { title: "Time Management", text: "Plan your day effectively and never miss a deadline.", img: "/images/Time-Management.jpg" },
-                    { title: "Goal Tracking", text: "Set, track, and achieve your goals with ease.", img: "/images/GoalTracking.jpg" },
-                    { title: "Reduce Stress", text: "Organize your tasks and reduce daily stress.", img: "/images/avoid-stress-scaled.jpg" }
-                  ].map((card, index) => (
-                    <div key={index} className="col">
-                      <div className="card h-100 custom-card shadow-lg" style={{width:"90%"}}>
-                        <div className="card-img-container">
-                          <img src={card.img} className="card-img-top" alt={card.title} />
-                        </div>
-                        <div className="card-body text-center">
-                          <h5 className="card-title">{card.title}</h5>                                                   
+                <div className="container text-center mt-5 text-white homepage-content">
+                  <h1 className="display-4 fw-bold task-heading" style={{textAlign:"left"}}>Manage Your Tasks Effortlessly</h1>
+                  <p className="lead task-subheading" style={{textAlign:"left"}}>
+                    Stay organized and boost productivity with TodoApp. Create, track, and complete your tasks seamlessly.
+                  </p>
+                  <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4" style={{paddingBottom:"10px"}}>
+                    {[
+                      { title: "Goal Tracking", img: "/images/GoalTracking.jpg" },
+                      { title: "Time Management", img: "/images/TimeManagement.jpg" },
+                      { title: "Focused", img: "/images/Focused.png" },
+                      { title: "Reduce Stress",img: "/images/ReduceStress.jpg" }
+                    ].map((card, index) => (
+                      <div key={index} className="col">
+                        <div className="card h-100 custom-card shadow-lg">
+                          <div className="card-img-container">
+                            <img src={card.img} className="card-img-top" alt={card.title} />
+                          </div>
+                          <div className="card-body text-center card-body-custom" style={{paddingTop:"10px"}}>
+                            <h5 className="card-title">{card.title}</h5>                                                   
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
 
-              </div>
+                </div>
             }
           />
         </Routes>

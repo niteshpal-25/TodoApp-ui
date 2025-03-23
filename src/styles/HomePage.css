@@ -1,23 +1,22 @@
-
-.btn-login{
-    background-color: #007bff !important;
-    color: #f8f9fa !important;
-    border-color: #007bff !important;
-  }
+.btn-login {
+  background-color: #007bff !important;
+  color: #f8f9fa !important;
+  border-color: #007bff !important;
+}
 
   .btn-Sign{
-    background-color: #007bff !important;
-    color: #f8f9fa !important;
-    border-color: #007bff !important;
-  } 
+  background-color: #007bff !important;
+  color: #f8f9fa !important;
+  border-color: #007bff !important;
+}
 
-  /* Background Image Styling */
-  .homepage {
-    background-image: url("../../public/images/background.png");
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-    min-height: 100vh;
-  }
+/* Background Image Styling */
+.homepage {
+  background-image: url("../../public/images/background.png");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+}
 
 /* Overlay Effect for Better Readability */
 .homepage-content {
@@ -26,8 +25,7 @@
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
-  text-align: center;
-  padding: 30px;
+  text-align: center;  
 }
 
 /* Card Styling */
@@ -47,6 +45,14 @@
   background: #fff;
 }
 
+.custom-card .card-img-container{
+  height: 80%;
+}
+
+.custom-card .card-body-custom{
+  padding: 0px;
+}
+
 /* Card Hover Effect */
 .custom-card:hover {
   transform: translateY(-10px);
@@ -58,14 +64,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 15px;
   background-color: #f8f9fa;
 }
 
 .card-img-top {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
+  height: 165px;
+  border-radius: 10%;
   object-fit: cover;
 }
 
