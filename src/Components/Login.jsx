@@ -10,7 +10,6 @@ const Login = () => {
             src="../images/Todo.jpg" 
             alt="Login Visual"
             className="img-fluid h-100 w-100"
-            style={{ objectFit: "cover" }}
           />
         </div>
         
