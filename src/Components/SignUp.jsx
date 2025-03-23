@@ -9,27 +9,44 @@ const SignUp = () => {
           <img
             src="../images/Todo.jpg"
             alt="SignUp Visual"
-            className="img-fluid h-100 w-100"
-            style={{ objectFit: "cover" }}
+            className="img-fluid h-100 w-100"            
           />
         </div>
-        
+
         {/* Form Section */}
         <div className="col-md-6 p-4 bg-white">
           <h2 className="text-center mb-4">Sign Up</h2>
           <form className="border p-3 rounded">
-            <div className="mb-3 text-start">
-              <label className="form-label">Full Name</label>
-              <input type="text" className="form-control" placeholder="Enter full name" required />
+          <div className="row mb-3 text-start">
+              
+              <div className="col-md-6">
+                <label className="form-label">First Name</label>
+                <input type="password" className="form-control" placeholder="Enter First Name" required />
+              </div>
+              <div className="col-md-6">
+                <label className="form-label">Last Name</label>
+                <input type="password" className="form-control" placeholder="Last Name" required />
+              </div>
             </div>
+
+            {/* Email Address Field */}
             <div className="mb-3 text-start">
               <label className="form-label">Email address</label>
               <input type="email" className="form-control" placeholder="Enter email" required />
             </div>
-            <div className="mb-3 text-start">
-              <label className="form-label">Password</label>
-              <input type="password" className="form-control" placeholder="Enter password" required />
+
+            {/* Password and Confirm Password in the same row */}
+            <div className="row mb-3 text-start">
+              <div className="col-md-6">
+                <label className="form-label">Password</label>
+                <input type="password" className="form-control" placeholder="Enter password" required />
+              </div>
+              <div className="col-md-6">
+                <label className="form-label">Confirm Password</label>
+                <input type="password" className="form-control" placeholder="Confirm password" required />
+              </div>
             </div>
+
             <button type="submit" className="btn btn-primary w-100">Sign Up</button>
           </form>
           <p className="text-center mt-3">
