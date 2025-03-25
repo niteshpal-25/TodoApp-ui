@@ -36,7 +36,7 @@ const Login = () => {
     <div className="container d-flex justify-content-center align-items-center vh-100">
       <div className="row shadow-lg rounded overflow-hidden" style={{ width: "800px" }}>
         {/* Image Section */}
-        <div className="col-md-6 d-none d-md-block p-0">
+        <div className="col-md-6 d-none d-md-block p-0">          
           <img
             src="../images/Todo.jpg"
             alt="Login Visual"
