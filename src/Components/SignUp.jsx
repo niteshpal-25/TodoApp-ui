@@ -22,6 +22,7 @@ const SignUp = () => {
       setError("Passwords do not match.");
       return;
     }
+    
 
     try {
       const response = await fetch("https://your-api.com/api/signup", {
