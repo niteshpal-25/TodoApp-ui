@@ -8,6 +8,7 @@ const SignUp = () => {
     email: "",
     password: "",
     confirmPassword: "",
+    role: "", // added role field
   });
   const [error, setError] = useState("");
 
@@ -47,7 +48,7 @@ const SignUp = () => {
   };
 
   return (
-    <div className="container-fluid d-flex justify-content-center align-items-center vh-100" style={{ overflow: 'hidden' }}>
+    <div className="container-fluid d-flex justify-content-center align-items-center vh-100" style={{ overflow: "hidden" }}>
       <div className="row shadow-lg rounded overflow-hidden" style={{ width: "800px" }}>
         {/* Image Section */}
         <div className="col-md-6 d-none d-md-block p-0">
@@ -61,16 +62,15 @@ const SignUp = () => {
 
         {/* Form Section */}
         <div className="col-md-6 p-4 bg-white">
-          <h2 className="text-center mb-3">Sign Up</h2>
+          <h2 className="text-center mb-4">Sign Up</h2>
           <form className="border p-3 rounded" onSubmit={handleSignUp}>
             {/* Username Field */}
-            <div className="mb-2 text-start">
-              <label className="form-label">Username</label>
+            <div className="mb-3 d-flex align-items-center">
               <input
                 type="text"
                 className="form-control"
-                name="username"
                 placeholder="Enter Username"
+                name="username"
                 value={formData.username}
                 onChange={handleChange}
                 required
@@ -78,13 +78,12 @@ const SignUp = () => {
             </div>
 
             {/* First Name Field */}
-            <div className="mb-2 text-start">
-              <label className="form-label">First Name</label>
+            <div className="mb-3 d-flex align-items-center">
               <input
                 type="text"
                 className="form-control"
-                name="firstName"
                 placeholder="Enter First Name"
+                name="firstName"
                 value={formData.firstName}
                 onChange={handleChange}
                 required
@@ -92,13 +91,12 @@ const SignUp = () => {
             </div>
 
             {/* Last Name Field */}
-            <div className="mb-2 text-start">
-              <label className="form-label">Last Name</label>
+            <div className="mb-3 d-flex align-items-center">
               <input
                 type="text"
                 className="form-control"
-                name="lastName"
                 placeholder="Enter Last Name"
+                name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
                 required
@@ -106,13 +104,12 @@ const SignUp = () => {
             </div>
 
             {/* Email Address Field */}
-            <div className="mb-2 text-start">
-              <label className="form-label">Email address</label>
+            <div className="mb-3 d-flex align-items-center">
               <input
                 type="email"
                 className="form-control"
-                name="email"
                 placeholder="Enter Email"
+                name="email"
                 value={formData.email}
                 onChange={handleChange}
                 required
@@ -120,13 +117,12 @@ const SignUp = () => {
             </div>
 
             {/* Password Field */}
-            <div className="mb-2 text-start">
-              <label className="form-label">Password</label>
+            <div className="mb-3 d-flex align-items-center">
               <input
                 type="password"
                 className="form-control"
-                name="password"
                 placeholder="Enter Password"
+                name="password"
                 value={formData.password}
                 onChange={handleChange}
                 required
@@ -134,13 +130,12 @@ const SignUp = () => {
             </div>
 
             {/* Confirm Password Field */}
-            <div className="mb-3 text-start">
-              <label className="form-label">Confirm Password</label>
+            <div className="mb-3 d-flex align-items-center">
               <input
                 type="password"
                 className="form-control"
-                name="confirmPassword"
                 placeholder="Confirm Password"
+                name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 required
@@ -151,11 +146,13 @@ const SignUp = () => {
             {error && <p className="text-danger text-center">{error}</p>}
 
             {/* Submit Button */}
-            <button type="submit" className="btn btn-primary w-100">Sign Up</button>
+            <div className="d-flex justify-content-end">
+              <button type="submit" className="btn btn-primary w-100">Sign Up</button>
+            </div>
           </form>
 
           {/* Login Link */}
-          <p className="text-center mt-2">
+          <p className="text-center mt-3">
             Already have an account? <a href="/login">Login</a>
           </p>
         </div>

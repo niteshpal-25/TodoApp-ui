@@ -21,8 +21,8 @@ const Login = () => {
 
       const data = await response.json();
 
-      if (response.ok) {        
-        alert("Login successful!");        
+      if (response.ok) {
+        alert("Login successful!");
         window.location.href = ToDoApp;
       } else {
         setError(data.message || "Login failed. Please try again.");
@@ -36,11 +36,12 @@ const Login = () => {
     <div className="container d-flex justify-content-center align-items-center vh-100">
       <div className="row shadow-lg rounded overflow-hidden" style={{ width: "800px" }}>
         {/* Image Section */}
-        <div className="col-md-6 d-none d-md-block p-0">          
+        <div className="col-md-6 d-none d-md-block p-0">
           <img
             src="../images/Todo.jpg"
             alt="Login Visual"
             className="img-fluid h-100 w-100"
+            style={{ objectFit: "cover" }}
           />
         </div>
 
@@ -48,8 +49,7 @@ const Login = () => {
         <div className="col-md-6 p-4 bg-white">
           <h2 className="text-center mb-4">Login</h2>
           <form className="border p-3 rounded" onSubmit={handleLogin}>
-            <div className="mb-3 text-start">
-              <label className="form-label">Email address</label>
+            <div className="mb-3 col-12">
               <input
                 type="email"
                 className="form-control"
@@ -59,8 +59,8 @@ const Login = () => {
                 required
               />
             </div>
-            <div className="mb-3 text-start">
-              <label className="form-label">Password</label>
+
+            <div className="mb-3 col-12">
               <input
                 type="password"
                 className="form-control"
@@ -70,9 +70,19 @@ const Login = () => {
                 required
               />
             </div>
+
+            {/* Error Message */}
             {error && <p className="text-danger text-center">{error}</p>}
-            <button type="submit" className="btn btn-primary w-100">Login</button>
+
+            {/* Submit Button */}
+            <div className="d-flex justify-content-end col-12">
+              <button type="submit" className="btn btn-primary w-100">
+                Login
+              </button>
+            </div>
           </form>
+
+          {/* Sign Up Link */}
           <p className="text-center mt-3">
             Don't have an account? <a href="/signup">Sign Up</a>
           </p>
