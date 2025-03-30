@@ -84,9 +84,24 @@ const AdminPage = () => {
 
       {/* Main Content */}
       <main className="p-4">
-        <p>Welcome to the Admin Dashboard!</p>
         {error && <p className="text-danger">{error}</p>}
-        {showForm && <CreateUserForm onClose={() => setShowForm(false)} />}
+        {/* {showForm && <CreateUserForm onClose={() => setShowForm(false)} />} */}
+
+        {showForm && (
+          <>
+            {/* Backdrop */}
+            <div className="modal-backdrop show" style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}></div>
+
+            {/* Modal */}
+            <div className="modal show d-block" tabIndex="-1">
+              <div className="modal-dialog modal-dialog-centered">
+                <div className="modal-content">
+                  <CreateUserForm onClose={() => setShowForm(false)} />
+                </div>
+              </div>
+            </div>
+          </>
+        )}
 
         {/* Users Table */}
         <div className="mt-4 table-container">
