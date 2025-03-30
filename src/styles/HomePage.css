@@ -99,4 +99,18 @@
   line-height:0.5;
 }
 
+.table-container {
+  max-height: 300px; /* Adjust height as needed */
+  margin-bottom: 20px;
+}
+
+.scrollable-table {
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.scrollable-table table {
+  width: 100%;
+}
+
 

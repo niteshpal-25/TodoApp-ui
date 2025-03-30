@@ -1,34 +1,51 @@
 import React, { useState } from "react";
-import ToDoApp from "./ToDoApp";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setEmail] = useState("vishal");
+  const [password, setPassword] = useState("vishal@06");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError("");
+    setLoading(true);
+    setError(""); // Clear previous errors
+
+    const formData = new URLSearchParams();
+    formData.append("username", username);
+    formData.append("password", password);
 
     try {
-      const response = await fetch("https://your-api.com/api/login", {
+      const response = await fetch("http://127.0.0.1:8000/auth/token", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
         },
-        body: JSON.stringify({ email, password }),
+        body: formData,
       });
 
-      const data = await response.json();
+      const result = await response.json();
 
       if (response.ok) {
-        alert("Login successful!");
-        window.location.href = ToDoApp;
+        // Store token and role in localStorage
+        localStorage.setItem("token", result.access_token);
+        localStorage.setItem("role", result.userdata.role);
+
+        // Redirect based on role
+        if (result.userdata.role === "admin") {
+          navigate("/admin");
+        } else {
+          navigate("/user");
+        }
       } else {
-        setError(data.message || "Login failed. Please try again.");
+        setError(result.detail || "Login failed. Please try again.");
       }
     } catch (err) {
       setError("An error occurred. Please try again later.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -51,10 +68,10 @@ const Login = () => {
           <form className="border p-3 rounded" onSubmit={handleLogin}>
             <div className="mb-3 col-12">
               <input
-                type="email"
+                type="text"
                 className="form-control"
-                placeholder="Enter email"
-                value={email}
+                placeholder="Enter username"
+                value={username}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
@@ -77,7 +94,7 @@ const Login = () => {
             {/* Submit Button */}
             <div className="d-flex justify-content-end col-12">
               <button type="submit" className="btn btn-primary w-100">
-                Login
+                {loading ? "Logging in..." : "Login"}
               </button>
             </div>
           </form>
