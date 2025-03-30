@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import CreateUserForm from "./CreateUserForm";
 import "../styles/UserPage.css";
+import CreateTodoForm from "./CreateTodoForm";
 
 const UserPage = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -71,11 +72,23 @@ const UserPage = () => {
 
       {/* Main Content */}
       <main className="p-4">
-        <p>Welcome to the User Dashboard!</p>
         {error && <p className="text-danger">{error}</p>}
-        {showForm && <CreateUserForm onClose={() => setShowForm(false)} />}
+        {showForm && (
+          <>
+            {/* Backdrop */}
+            <div className="modal-backdrop show" style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}></div>
 
-        {/* Display Todos in Scrollable Table */}
+            {/* Modal */}
+            <div className="modal show d-block" tabIndex="-1">
+              <div className="modal-dialog modal-dialog-centered">
+                <div className="modal-content">
+                  <CreateTodoForm onClose={() => setShowForm(false)} />
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+
         <div className="mt-4 table-container">
           <h4>Your Todos</h4>
           {todos.length > 0 ? (
