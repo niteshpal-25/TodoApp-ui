@@ -27,7 +27,7 @@ const CreateUserForm = ({ onClose }) => {
 
   return (
     <div className="modal-overlay d-flex justify-content-center align-items-center">
-      <div className="modal-content bg-white p-4 rounded shadow-lg" style={{ width: "600px" }}>
+      <div className="modal-content bg-white p-4 rounded shadow-lg" style={{ width: "600px",height:"380px" }}>
         <h4 className="mb-3 text-center">Create User</h4>
         <form onSubmit={handleSubmit} className="row">
           {/* User Name Field */}
