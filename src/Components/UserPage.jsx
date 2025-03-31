@@ -3,12 +3,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import CreateUserForm from "./CreateUserForm";
 import "../styles/UserPage.css";
 import CreateTodoForm from "./CreateTodoForm";
+import { useNavigate } from "react-router-dom";
 
 const UserPage = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [todos, setTodos] = useState([]);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   // Fetch todos from the API
   const fetchTodos = async () => {
@@ -43,7 +45,7 @@ const UserPage = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
-    window.location.href = "/login";
+    navigate("/login");
   };
 
   return (
