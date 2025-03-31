@@ -26,6 +26,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        
         <Route
           path="/user"
           element={

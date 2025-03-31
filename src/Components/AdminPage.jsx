@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import CreateUserForm from "./CreateUserForm";
 import "../styles/AdminPage.css";
+import { useNavigate } from "react-router-dom";
 
 const AdminPage = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -9,6 +10,7 @@ const AdminPage = () => {
   const [todos, setTodos] = useState([]);
   const [users, setUsers] = useState([]);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   // Fetch Todos and Users
   const fetchAdminData = async () => {
@@ -55,7 +57,7 @@ const AdminPage = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
-    window.location.href = "/login";
+    navigate("/login");
   };
 
   return (
