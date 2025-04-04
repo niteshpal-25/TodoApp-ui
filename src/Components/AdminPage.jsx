@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import CreateUserForm from "./CreateUserForm";
 import "../styles/AdminPage.css";
-import { useNavigate } from "react-router-dom";
 
 const AdminPage = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -10,7 +9,6 @@ const AdminPage = () => {
   const [todos, setTodos] = useState([]);
   const [users, setUsers] = useState([]);
   const [error, setError] = useState("");
-  const navigate = useNavigate();
 
   // Fetch Todos and Users
   const fetchAdminData = async () => {
@@ -54,10 +52,14 @@ const AdminPage = () => {
   }, []);
 
   // Handle Logout
+  const handleProfileDetais = () => {
+    window.location.href = "/Profile";
+  };
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
-    navigate("/login");
+    window.location.href = "/login";
   };
 
   return (
@@ -76,8 +78,15 @@ const AdminPage = () => {
               A
             </button>
             {showMenu && (
-              <div className="position-absolute bg-white text-dark p-2 rounded shadow" style={{ right: 0, top: "45px" }}>
-                <button className="btn btn-danger btn-sm w-100" onClick={handleLogout}>Logout</button>
+              <div className="position-absolute bg-white text-dark p-3 rounded shadow-lg border" style={{ right: 10, top: "45px", minWidth: "160px" }}>
+                <button className="btn btn-light w-100 mb-2 text-primary fw-semibold d-flex align-items-center justify-content-center border rounded-pill shadow-sm"
+                  onClick={handleProfileDetais}>
+                  <i className="bi bi-person-circle me-2 fs-5 text-primary"></i> Profile
+                </button>
+                <button className="btn btn-light w-100 text-danger fw-semibold d-flex align-items-center justify-content-center border rounded-pill shadow-sm"
+                  onClick={handleLogout}>
+                  <i className="bi bi-box-arrow-right me-2 fs-5 text-danger"></i> Logout
+                </button>
               </div>
             )}
           </div>

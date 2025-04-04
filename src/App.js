@@ -7,6 +7,7 @@ import Login from "./Components/Login";
 import SignUp from "./Components/SignUp";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import UserPage from "./Components/UserPage";
+import Profile from "./Components/Profile";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         {/* Public Routes */}
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/Profile" element={<Profile />} />
         <Route path="/signup" element={<SignUp />} />
         
         {/* Protected Route */}
