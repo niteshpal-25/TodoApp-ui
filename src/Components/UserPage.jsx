@@ -3,14 +3,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import CreateUserForm from "./CreateUserForm";
 import "../styles/UserPage.css";
 import CreateTodoForm from "./CreateTodoForm";
-import { useNavigate } from "react-router-dom";
 
 const UserPage = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [todos, setTodos] = useState([]);
   const [error, setError] = useState("");
-  const navigate = useNavigate();
 
   // Fetch todos from the API
   const fetchTodos = async () => {
@@ -45,7 +43,11 @@ const UserPage = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
-    navigate("/login");
+    window.location.href = "/login";
+  };
+
+  const handleProfileDetais = () => {
+    window.location.href = "/Profile";
   };
 
   return (
@@ -64,8 +66,15 @@ const UserPage = () => {
               P
             </button>
             {showMenu && (
-              <div className="position-absolute bg-white text-dark p-2 rounded shadow" style={{ right: 0, top: "45px" }}>
-                <button className="btn btn-danger btn-sm w-100" onClick={handleLogout}>Logout</button>
+              <div className="position-absolute bg-white text-dark p-3 rounded shadow-lg border" style={{ right: 10, top: "45px", minWidth: "160px" }}>
+                <button className="btn btn-light w-100 mb-2 text-primary fw-semibold d-flex align-items-center justify-content-center border rounded-pill shadow-sm"
+                  onClick={handleProfileDetais}>
+                  <i className="bi bi-person-circle me-2 fs-5 text-primary"></i> Profile
+                </button>
+                <button className="btn btn-light w-100 text-danger fw-semibold d-flex align-items-center justify-content-center border rounded-pill shadow-sm"
+                  onClick={handleLogout}>
+                  <i className="bi bi-box-arrow-right me-2 fs-5 text-danger"></i> Logout
+                </button>
               </div>
             )}
           </div>
