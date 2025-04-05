@@ -3,6 +3,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import CreateUserForm from "./CreateUserForm";
 import "../styles/UserPage.css";
 import CreateTodoForm from "./CreateTodoForm";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit,faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const UserPage = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -112,6 +114,7 @@ const UserPage = () => {
                     <th>Description</th>
                     <th>Priority</th>
                     <th>Complete</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -122,6 +125,17 @@ const UserPage = () => {
                       <td>{todo.description}</td>
                       <td>{todo.priority}</td>
                       <td>{todo.complete.toString()}</td>
+                      <td>
+                        <button className="btn btn-ops btn-outline-success">
+                          <FontAwesomeIcon icon={faEdit} className="me-2" />
+                          Edit
+                        </button>
+                                              
+                        <button className="btn btn-ops btn-outline-danger">
+                          <FontAwesomeIcon icon={faTrash} className="me-2" />
+                          Delete
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
