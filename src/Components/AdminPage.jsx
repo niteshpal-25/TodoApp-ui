@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import CreateUserForm from "./CreateUserForm";
 import "../styles/AdminPage.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit,faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const AdminPage = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -126,6 +128,7 @@ const AdminPage = () => {
                     <th>Username</th>
                     <th>Email</th>
                     <th>Role</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -135,6 +138,17 @@ const AdminPage = () => {
                       <td>{user.username}</td>
                       <td>{user.email}</td>
                       <td>{user.role}</td>
+                      <td>
+                        <button className="btn btn-ops btn-outline-success">
+                          <FontAwesomeIcon icon={faEdit} className="me-2" />
+                          Edit
+                        </button>
+
+                        <button className="btn btn-ops btn-outline-danger">
+                          <FontAwesomeIcon icon={faTrash} className="me-2" />
+                          Delete
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -158,6 +172,7 @@ const AdminPage = () => {
                     <th>Description</th>
                     <th>Status</th>
                     <th>Created At</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -168,6 +183,17 @@ const AdminPage = () => {
                       <td>{todo.description}</td>
                       <td>{todo.status}</td>
                       <td>{new Date(todo.created_at).toLocaleString()}</td>
+                      <td>
+                        <button className="btn btn-ops btn-outline-success">
+                          <FontAwesomeIcon icon={faEdit} className="me-2" />
+                          Edit
+                        </button>
+
+                        <button className="btn btn-ops btn-outline-danger">
+                          <FontAwesomeIcon icon={faTrash} className="me-2" />
+                          Delete
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
