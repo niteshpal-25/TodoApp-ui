@@ -58,59 +58,61 @@ function Profile() {
             </header>
             <div className="profile-container">
                 <div className="profile-section">
-                    <div className="form-group">
-                        <label>User Name:</label>
-                        <input
-                            type="text"
-                            name="username"
-                            value={formData.username}
-                            onChange={handleInputChange}
-                            disabled={!isEditing}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>First Name:</label>
-                        <input
-                            type="text"
-                            name="first_name"
-                            value={formData.first_name}
-                            onChange={handleInputChange}
-                            disabled={!isEditing}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>Last Name:</label>
-                        <input
-                            type="text"
-                            name="last_name"
-                            value={formData.last_name}
-                            onChange={handleInputChange}
-                            disabled={!isEditing}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>Role:</label>
-                        <input
-                            type="text"
-                            name="role"
-                            value={formData.role}
-                            onChange={handleInputChange}
-                            disabled={!isEditing}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>Email:</label>
-                        <input
-                            type="text"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleInputChange}
-                            disabled={!isEditing}
-                        />
-                    </div>
-                    <div className="button-group">
-                        <button onClick={handleEdit}>Edit</button>
-                        <button onClick={handleSave}>Save</button>
+                    <div className='content-item'>
+                        <div className="form-group">
+                            <label>User Name:</label>
+                            <input
+                                type="text"
+                                name="username"
+                                value={formData.username}
+                                onChange={handleInputChange}
+                                disabled={!isEditing}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>First Name:</label>
+                            <input
+                                type="text"
+                                name="first_name"
+                                value={formData.first_name}
+                                onChange={handleInputChange}
+                                disabled={!isEditing}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Last Name:</label>
+                            <input
+                                type="text"
+                                name="last_name"
+                                value={formData.last_name}
+                                onChange={handleInputChange}
+                                disabled={!isEditing}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Role:</label>
+                            <input
+                                type="text"
+                                name="role"
+                                value={formData.role}
+                                onChange={handleInputChange}
+                                disabled={!isEditing}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Email:</label>
+                            <input
+                                type="text"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleInputChange}
+                                disabled={!isEditing}
+                            />
+                        </div>
+                        <div className="button-group">
+                            <button onClick={handleEdit}>Edit</button>
+                            <button onClick={handleSave}>Save</button>
+                        </div>
                     </div>
                 </div>
             </div>

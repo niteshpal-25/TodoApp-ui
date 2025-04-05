@@ -3,14 +3,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background-color: #f5f5f5;
+  height: 70vh;
+  margin: 10px;
 }
 
 .profile-section {
   border: 2px solid black;
   padding: 30px; /* Increased padding for more internal space */
-  width: 600px; /* Increased width from 400px to 600px */
+  width: 900px; 
   text-align: left;
   background-color: white;
 }
@@ -42,8 +42,12 @@
 }
 
 .button-group {
-  text-align: center;
   margin-top: 30px; /* Increased margin for more spacing */
+}
+
+.content-item{
+  position: relative;
+  left: 45%;
 }
 
 .button-group button {
