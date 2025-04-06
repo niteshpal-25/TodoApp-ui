@@ -4,7 +4,7 @@ import CreateUserForm from "./CreateUserForm";
 import "../styles/UserPage.css";
 import CreateTodoForm from "./CreateTodoForm";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit,faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const UserPage = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -51,6 +51,31 @@ const UserPage = () => {
   const handleProfileDetais = () => {
     window.location.href = "/Profile";
   };
+
+  const handleDeleteTodo = async (id) => {    
+    const confirmDelete = window.confirm("Are you sure you want to delete this todo?");
+    if (!confirmDelete) return;
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`http://127.0.0.1:8000/todos/${id}/`, {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete todo");
+      }
+
+      fetchTodos();
+
+    } catch (error) {
+      setError("Error deleting todo. Please try again.");
+      console.error(error);
+    }
+  }
+
 
   return (
     <div className="container-fluid">
@@ -130,9 +155,9 @@ const UserPage = () => {
                           <FontAwesomeIcon icon={faEdit} className="me-2" />
                           Edit
                         </button>
-                                              
-                        <button className="btn btn-ops btn-outline-danger">
-                          <FontAwesomeIcon icon={faTrash} className="me-2" />
+
+                        <button className="btn btn-ops btn-outline-danger" onClick={() => handleDeleteTodo(todo.id)}>
+                          <FontAwesomeIcon icon={faTrash} className="me-2"  />
                           Delete
                         </button>
                       </td>
