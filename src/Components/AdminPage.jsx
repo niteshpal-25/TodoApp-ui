@@ -48,7 +48,30 @@ const AdminPage = () => {
     }
   };
 
-  // Call the fetch function on component mount
+  const handleDeleteTodo = async (id) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this todo?");
+    if (!confirmDelete) return;
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`http://127.0.0.1:8000/admin/todo/${id}/`, {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete todo");
+      }
+
+      fetchAdminData();
+
+    } catch (error) {
+      setError("Error deleting todo. Please try again.");
+      console.error(error);
+    }
+  }
+
   useEffect(() => {
     fetchAdminData();
   }, []);
@@ -77,7 +100,7 @@ const AdminPage = () => {
               style={{ width: "40px", height: "40px" }}
               onClick={() => setShowMenu(!showMenu)}
             >
-              A
+              {localStorage.getItem("username").substring(0, 1).toUpperCase()}
             </button>
             {showMenu && (
               <div className="position-absolute bg-white text-dark p-3 rounded shadow-lg border" style={{ right: 10, top: "45px", minWidth: "160px" }}>
@@ -97,7 +120,7 @@ const AdminPage = () => {
 
       {/* Main Content */}
       <main className="p-4">
-        {error && <p className="text-danger">{error}</p>}
+        {error && <p className="text-danger">{error}</p>}        
         {/* {showForm && <CreateUserForm onClose={() => setShowForm(false)} />} */}
 
         {showForm && (
@@ -124,7 +147,7 @@ const AdminPage = () => {
               <table className="table table-bordered table-striped">
                 <thead className="table-dark">
                   <tr>
-                    <th>ID</th>
+                    <th style={{display:"none"}}>ID</th>
                     <th>Username</th>
                     <th>Email</th>
                     <th>Role</th>
@@ -134,7 +157,7 @@ const AdminPage = () => {
                 <tbody>
                   {users.map((user) => (
                     <tr key={user.id}>
-                      <td>{user.id}</td>
+                      <td style={{display:"none"}}>{user.id}</td>
                       <td>{user.username}</td>
                       <td>{user.email}</td>
                       <td>{user.role}</td>
@@ -155,7 +178,7 @@ const AdminPage = () => {
               </table>
             </div>
           ) : (
-            <p>No users available.</p>
+            <p className="no-todos-message">No users available.</p>
           )}
         </div>
 
@@ -167,29 +190,24 @@ const AdminPage = () => {
               <table className="table table-bordered table-striped">
                 <thead className="table-dark">
                   <tr>
-                    <th>ID</th>
+                  <th style={{display:"none"}}>ID</th>
                     <th>Title</th>
                     <th>Description</th>
-                    <th>Status</th>
-                    <th>Created At</th>
+                    <th>Priority</th>
+                    <th>Complete</th>
                     <th></th>
                   </tr>
                 </thead>
                 <tbody>
                   {todos.map((todo) => (
                     <tr key={todo.id}>
-                      <td>{todo.id}</td>
+                      <td style={{display:"none"}}>{todo.id}</td>
                       <td>{todo.title}</td>
                       <td>{todo.description}</td>
-                      <td>{todo.status}</td>
-                      <td>{new Date(todo.created_at).toLocaleString()}</td>
+                      <td>{todo.priority}</td>
+                      <td>{todo.complete.toString()}</td>
                       <td>
-                        <button className="btn btn-ops btn-outline-success">
-                          <FontAwesomeIcon icon={faEdit} className="me-2" />
-                          Edit
-                        </button>
-
-                        <button className="btn btn-ops btn-outline-danger">
+                        <button className="btn btn-ops btn-outline-danger"  onClick={() => handleDeleteTodo(todo.id)}>
                           <FontAwesomeIcon icon={faTrash} className="me-2" />
                           Delete
                         </button>
@@ -200,7 +218,7 @@ const AdminPage = () => {
               </table>
             </div>
           ) : (
-            <p>No todos available.</p>
+            <p className="no-todos-message">No todos available.</p>
           )}
         </div>
       </main>

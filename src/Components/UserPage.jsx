@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import CreateUserForm from "./CreateUserForm";
 import "../styles/UserPage.css";
 import CreateTodoForm from "./CreateTodoForm";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -11,6 +10,7 @@ const UserPage = () => {
   const [showForm, setShowForm] = useState(false);
   const [todos, setTodos] = useState([]);
   const [error, setError] = useState("");
+  const [editTodo, setEditTodo] = useState(null);
 
   // Fetch todos from the API
   const fetchTodos = async () => {
@@ -20,7 +20,7 @@ const UserPage = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`, // Pass the access token
+          "Authorization": `Bearer ${token}`, 
         },
       });
 
@@ -29,14 +29,13 @@ const UserPage = () => {
       }
 
       const data = await response.json();
-      setTodos(data); // Assuming the response is an array of todos
+      setTodos(data);      
     } catch (err) {
       setError("Error fetching todos. Please try again.");
       console.error(err);
     }
   };
 
-  // Call the fetchTodos function when the component mounts
   useEffect(() => {
     fetchTodos();
   }, []);
@@ -52,7 +51,12 @@ const UserPage = () => {
     window.location.href = "/Profile";
   };
 
-  const handleDeleteTodo = async (id) => {    
+  const handleEditTodo = (id, title, description, priority, complete) => {
+    setEditTodo({ id, title, description, priority, complete });
+    setShowForm(true);
+  };
+
+  const handleDeleteTodo = async (id) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this todo?");
     if (!confirmDelete) return;
     try {
@@ -90,7 +94,7 @@ const UserPage = () => {
               style={{ width: "40px", height: "40px" }}
               onClick={() => setShowMenu(!showMenu)}
             >
-              P
+              {localStorage.getItem("username").substring(0, 1).toUpperCase()}
             </button>
             {showMenu && (
               <div className="position-absolute bg-white text-dark p-3 rounded shadow-lg border" style={{ right: 10, top: "45px", minWidth: "160px" }}>
@@ -120,7 +124,13 @@ const UserPage = () => {
             <div className="modal show d-block" tabIndex="-1">
               <div className="modal-dialog modal-dialog-centered">
                 <div className="modal-content">
-                  <CreateTodoForm onClose={() => setShowForm(false)} />
+                  <CreateTodoForm
+                    onClose={() => {
+                      setShowForm(false);
+                      setEditTodo(null); // Clear edit data on close
+                    }}
+                    initialData={editTodo}
+                  />
                 </div>
               </div>
             </div>
@@ -134,7 +144,7 @@ const UserPage = () => {
               <table className="table table-striped">
                 <thead className="table-dark">
                   <tr>
-                    <th>ID</th>
+                    <th style={{display:"none"}}>ID</th>
                     <th>Title</th>
                     <th>Description</th>
                     <th>Priority</th>
@@ -145,19 +155,19 @@ const UserPage = () => {
                 <tbody>
                   {todos.map((todo) => (
                     <tr key={todo.id}>
-                      <td>{todo.id}</td>
+                      <td style={{display:"none"}}>{todo.id}</td>
                       <td>{todo.title}</td>
                       <td>{todo.description}</td>
                       <td>{todo.priority}</td>
                       <td>{todo.complete.toString()}</td>
                       <td>
-                        <button className="btn btn-ops btn-outline-success">
+                        <button className="btn btn-ops btn-outline-success" onClick={() => handleEditTodo(todo.id, todo.title, todo.description, todo.priority, todo.complete.toString())}>
                           <FontAwesomeIcon icon={faEdit} className="me-2" />
                           Edit
                         </button>
 
                         <button className="btn btn-ops btn-outline-danger" onClick={() => handleDeleteTodo(todo.id)}>
-                          <FontAwesomeIcon icon={faTrash} className="me-2"  />
+                          <FontAwesomeIcon icon={faTrash} className="me-2" />
                           Delete
                         </button>
                       </td>
@@ -167,7 +177,7 @@ const UserPage = () => {
               </table>
             </div>
           ) : (
-            <p>No todos available.</p>
+            <p className="no-todos-message">No todos available.</p>
           )}
         </div>
       </main>
