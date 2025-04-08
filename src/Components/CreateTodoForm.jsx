@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import '../styles/CreateTodoForm.css'
 
-const CreateTodoForm = ({ onClose }) => {
+const CreateTodoForm = ({ onClose, initialData }) => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     priority: 0,
-    complete: false
+    complete: false,
+    ...initialData,
   });
   const [error, setError] = useState("");
 
@@ -18,35 +19,58 @@ const CreateTodoForm = ({ onClose }) => {
     });
   };
 
+  useEffect(() => {
+    if (initialData) {
+      setFormData({
+        title: initialData.title,
+        description: initialData.description,
+        priority: initialData.priority,
+        complete: initialData.complete === "true" || initialData.complete === true
+      });
+    }
+  }, [initialData]);
+
   const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const priorityValue = Number(formData.priority);
+    if (priorityValue <= 0 || priorityValue >= 5) {
+      setError("Priority must be greater than 0 or less than 5.");
+      return;
+    }else{
+      setError("")
+    }
+
     try {
-      e.preventDefault();
       const token = localStorage.getItem("token");
-      console.log(token)
-      const response = await fetch("http://127.0.0.1:8000/todos/todo/", {
-        method: "POST",
+      const url = initialData?.id
+        ? `http://127.0.0.1:8000/todos/${initialData.id}/`
+        : "http://127.0.0.1:8000/todos/todo/";
+      const method = initialData?.id ? "PUT" : "POST";
+      const response = await fetch(url, {
+        method,
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify(formData),
       });
-  
+
       const data = await response.json();
       if (response.ok) {
-        alert("To Do list saved successfully.");
-        setFormData({title: "",description: "",priority: 0,complete: false});
+        alert(`To Do ${initialData?.id ? "updated" : "created"} successfully.`);
+        onClose(); // close modal
       } else {
         console.error("Validation Error:", data);
-        setError(data.message || "Error while saving To Do list.");
+        setError(data.message || "Error while saving To Do.");
       }
-  
-      console.log("Submitted data:", formData);
+
     } catch (error) {
-      console.error("Request Error:", error); 
+      console.error("Request Error:", error);
+      setError("Unexpected error occurred.");
     }
   };
-  
+
 
   return (
     <div className="modal-overlay d-flex justify-content-center align-items-center">
@@ -61,7 +85,7 @@ const CreateTodoForm = ({ onClose }) => {
               placeholder="Title"
               name="title"
               value={formData.title}
-              onChange={handleChange}
+              onChange={handleChange} required
             />
           </div>
 
@@ -72,7 +96,7 @@ const CreateTodoForm = ({ onClose }) => {
               placeholder="Description"
               name="description"
               value={formData.description}
-              onChange={handleChange}
+              onChange={handleChange} required
             />
           </div>
 
