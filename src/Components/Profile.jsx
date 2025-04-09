@@ -5,6 +5,7 @@ import '../styles/Profile.css'; // Import the CSS file
 function Profile() {
     const [results, setResult] = useState({});
     const [isEditing, setIsEditing] = useState(false);
+    const [error, setError] = useState("");
     const [formData, setFormData] = useState({
         username: '',
         first_name: '',
@@ -47,8 +48,33 @@ function Profile() {
     };
 
     const handleSave = async () => {
-        setIsEditing(false);
-        setResult(formData);
+        setIsEditing(false);  
+        console.log(formData)      
+        try {
+            const token = localStorage.getItem("token");
+            const url = "http://127.0.0.1:8000/auth/user/updateprofile";
+            const method = "PUT";
+            const response = await fetch(url, {
+              method,
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+              },
+              body: JSON.stringify(formData),
+            });
+      
+            const data = await response.json();
+            if (response.ok) {
+              alert(`user updated successfully.`);              
+            } else {
+              console.error("Validation Error:", data);
+              setError(data.message || "Error while saving To Do.");
+            }
+      
+          } catch (error) {
+            console.error("Request Error:", error);
+            setError("Unexpected error occurred.");
+          }
     };
 
     return (
@@ -96,7 +122,7 @@ function Profile() {
                                 name="role"
                                 value={formData.role}
                                 onChange={handleInputChange}
-                                disabled={!isEditing}
+                                disabled={true}
                             />
                         </div>
                         <div className="form-group">
@@ -106,7 +132,7 @@ function Profile() {
                                 name="email"
                                 value={formData.email}
                                 onChange={handleInputChange}
-                                disabled={!isEditing}
+                                disabled={true}
                             />
                         </div>
                         <div className="button-group">
