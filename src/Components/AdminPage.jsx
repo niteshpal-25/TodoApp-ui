@@ -11,6 +11,7 @@ const AdminPage = () => {
   const [todos, setTodos] = useState([]);
   const [users, setUsers] = useState([]);
   const [error, setError] = useState("");
+  const [edituser, setedituser] = useState(null);
 
   // Fetch Todos and Users
   const fetchAdminData = async () => {
@@ -68,6 +69,35 @@ const AdminPage = () => {
 
     } catch (error) {
       setError("Error deleting todo. Please try again.");
+      console.error(error);
+    }
+  }
+
+  const handleEdituser = (id, username,first_name,last_name, email, role) => {
+    setedituser({ id, username,first_name,last_name, email, role });
+    setShowForm(true);
+  };
+
+  const handleDeleteUser = async (id) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this user?");
+    if (!confirmDelete) return;
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`http://127.0.0.1:8000/admin/user/${id}/`, {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete user");
+      }
+
+      fetchAdminData();
+
+    } catch (error) {
+      setError("Error deleting user. Please try again.");
       console.error(error);
     }
   }
@@ -132,7 +162,11 @@ const AdminPage = () => {
             <div className="modal show d-block" tabIndex="-1">
               <div className="modal-dialog modal-dialog-centered">
                 <div className="modal-content">
-                  <CreateUserForm onClose={() => setShowForm(false)} />
+                  <CreateUserForm onClose={() => {
+                      setShowForm(false);
+                      setedituser(null); // Clear edit data on close
+                    }}
+                    initialData={edituser} />
                 </div>
               </div>
             </div>
@@ -162,12 +196,12 @@ const AdminPage = () => {
                       <td>{user.email}</td>
                       <td>{user.role}</td>
                       <td>
-                        <button className="btn btn-ops btn-outline-success">
+                        <button className="btn btn-ops btn-outline-success" onClick={() => handleEdituser(user.id, user.username,user.first_name,user.last_name, user.email, user.role)}>
                           <FontAwesomeIcon icon={faEdit} className="me-2" />
                           Edit
                         </button>
 
-                        <button className="btn btn-ops btn-outline-danger">
+                        <button className="btn btn-ops btn-outline-danger"  onClick={() => handleDeleteUser(user.id)}>
                           <FontAwesomeIcon icon={faTrash} className="me-2" />
                           Delete
                         </button>
