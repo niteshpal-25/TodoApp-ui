@@ -17,11 +17,11 @@ const CreateUserForm = ({ onClose, initialData }) => {
   useEffect(() => {
     if (initialData) {
       setFormData({
-        username: initialData.username,
-        first_name: initialData.first_name,
-        last_name: initialData.last_name,
-        email: initialData.email,
-        role: initialData.role,
+        username: initialData.username || "",
+        first_name: initialData.first_name || "",
+        last_name: initialData.last_name || "",
+        email: initialData.email || "",
+        role: initialData.role || "",
       });
     }
   }, [initialData]);
@@ -68,11 +68,41 @@ const CreateUserForm = ({ onClose, initialData }) => {
     };
   }
 
+  const handleEdit = async (e) => {
+    e.preventDefault();
+
+    if (!formData.username.trim()) {
+      setError("User Name is required");
+      return
+    }
+    else if (!formData.first_name.trim()) {
+      setError("First Name is required");
+      return
+    } else if (!formData.last_name.trim()) {
+      setError("Last Name is required");
+      return
+    } else if (!formData.email.trim()) {
+      setError("Email is required");
+      return
+    } else if (!formData.username.trim()) {
+      setError("Username is required");
+      return
+    }
+    else {
+      setError("");
+      CreateUser();
+    };
+  }
+
+
+
   const CreateUser = async () => {
     try {
       const token = localStorage.getItem("token");
-      const url = "http://127.0.0.1:8000/admin/user";
-      const method = "POST";
+      const url = initialData?.id
+        ? `http://127.0.0.1:8000/admin/user/${initialData.id}/`
+        : "http://127.0.0.1:8000/admin/user";
+      const method = initialData?.id ? "PUT" : "POST";
       const response = await fetch(url, {
         method,
         headers: {
@@ -84,7 +114,7 @@ const CreateUserForm = ({ onClose, initialData }) => {
 
       const data = await response.json();
       if (response.ok) {
-        alert(`User Created Successfully.`);
+        alert(`user ${initialData?.id ? "updated" : "created"} successfully.`);
         onClose(); // close modal
       } else {
         console.error("Validation Error:", data);
@@ -109,7 +139,7 @@ const CreateUserForm = ({ onClose, initialData }) => {
               </div>
 
 
-              <form onSubmit={handleSubmit} className="row">
+              <form onSubmit={handleEdit} className="row">
                 {/* User Name Field */}
                 <div className="mb-3 col-12 col-md-6">
                   <input

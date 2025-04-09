@@ -177,7 +177,7 @@ const AdminPage = () => {
         <div className="mt-4 table-container">
           <h4>Users</h4>
           {users.length > 0 ? (
-            <div className="table-responsive scrollable-table">
+            <div className="table-responsive scrollable-table" style={{maxHeight:"230px"}}>
               <table className="table table-bordered table-striped">
                 <thead className="table-dark">
                   <tr>
@@ -220,7 +220,7 @@ const AdminPage = () => {
         <div className="mt-4 table-container">
           <h4>Todos</h4>
           {todos.length > 0 ? (
-            <div className="table-responsive scrollable-table">
+            <div className="table-responsive scrollable-table" style={{maxHeight:"230px"}}>
               <table className="table table-bordered table-striped">
                 <thead className="table-dark">
                   <tr>
