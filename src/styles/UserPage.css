@@ -23,7 +23,7 @@
   margin-left: 4%;
 }
 
-.no-todos-message {
+/* .no-todos-message {
   text-align: center;
   color: #888;
   font-size: 1.2rem;
@@ -32,4 +32,78 @@
   border-radius: 10px;
   border: 1px solid #ddd;
   margin-top: 2rem;
+} */
+
+.no-todos-message {
+  text-align: center;
+  color: #444;
+  font-size: 1rem;
+  padding: 3rem 2rem;
+  background-color: #f9f9ff;
+  border-radius: 12px;
+  border: none;
+  margin-top: 4rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
+
+.no-todos-message p:first-of-type {
+  font-weight: 600;
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.no-todos-message p:nth-of-type(2) {
+  font-size: 0.95rem;
+  color: #777;
+  margin-bottom: 1.5rem;
+}
+
+.no-todos-message button {
+  background-color: #6c63ff;
+  border: none;
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: background-color 0.2s ease;
+}
+
+.no-todos-message button:hover {
+  background-color: #5952e8;
+}
+
+.search-box {
+  position: relative;
+  max-width: 300px;
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  color: #888;
+}
+
+.search-input {
+  padding-left: 2rem; /* space for the icon */
+  border-radius: 8px;
+}
+
+.filter-buttons .btn {
+  border-radius: 999px;
+  margin-left: 0.25rem;
+}
+
+.custom-checkbox {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #0d6efd; /* Bootstrap primary blue */
+}
+
+.custom-checkbox:focus {
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+

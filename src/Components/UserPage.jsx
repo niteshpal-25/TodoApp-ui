@@ -3,7 +3,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/UserPage.css";
 import CreateTodoForm from "./CreateTodoForm";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faPlus, faToggleOff, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faFileAlt } from "@fortawesome/free-solid-svg-icons/faFileAlt";
+import { faSearch } from "@fortawesome/free-solid-svg-icons/faSearch";
 
 const UserPage = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -11,6 +13,8 @@ const UserPage = () => {
   const [todos, setTodos] = useState([]);
   const [error, setError] = useState("");
   const [editTodo, setEditTodo] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filter, setFilter] = useState("All");
 
   // Fetch todos from the API
   const fetchTodos = async () => {
@@ -20,7 +24,7 @@ const UserPage = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`, 
+          "Authorization": `Bearer ${token}`,
         },
       });
 
@@ -29,7 +33,7 @@ const UserPage = () => {
       }
 
       const data = await response.json();
-      setTodos(data);      
+      setTodos(data);
     } catch (err) {
       setError("Error fetching todos. Please try again.");
       console.error(err);
@@ -80,14 +84,27 @@ const UserPage = () => {
     }
   }
 
+  const filteredTodos = todos.filter(todo =>
+    todo.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    todo.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const handleToggleComplete = (id) => {
+    const updatedTodos = todos.map(todo =>
+      todo.id === id ? { ...todo, complete: !todo.complete } : todo
+    );
+    setTodos(updatedTodos);
+  };
+  
+
 
   return (
     <div className="container-fluid">
       {/* Header */}
       <header className="d-flex justify-content-between align-items-center bg-dark text-white p-3 header">
-        <h2>User Dashboard</h2>
+        <h2>Todo App</h2>
         <div className="d-flex align-items-center">
-          <button className="btn btn-primary me-2" onClick={() => setShowForm(true)}>Create Todo</button>
+          <button className="btn btn-primary me-2" onClick={() => setShowForm(true)}><FontAwesomeIcon icon={faPlus} className="me-2" />Create Todo</button>
           <div className="position-relative">
             <button
               className="btn btn-secondary rounded-circle d-flex justify-content-center align-items-center"
@@ -136,40 +153,67 @@ const UserPage = () => {
             </div>
           </>
         )}
+        <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+          {/* Search Input */}
+          <div className="search-box position-relative">
+            <FontAwesomeIcon icon={faSearch} className="search-icon" />
+            <input
+              type="text"
+              className="form-control search-input"
+              placeholder="Search todos..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+
+          {/* Filter Buttons */}
+          <div className="d-flex flex-wrap gap-2 filter-buttons">
+            {["All", "Pending", "Completed", "High Priority", "Medium", "Low"].map((label) => (
+              <button
+                key={label}
+                className={`btn btn-sm ${filter === label ? "btn-primary" : "btn-outline-secondary"}`}
+                onClick={() => setFilter(label)}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
 
         <div className="mt-4 table-container">
-          <h4>Your Todos</h4>
           {todos.length > 0 ? (
             <div className="table-responsive scrollable-table">
               <table className="table table-striped">
                 <thead className="table-dark">
                   <tr>
-                    <th style={{display:"none"}}>ID</th>
+                    <th>Status</th>
+                    <th style={{ display: "none" }}>ID</th>
                     <th>Title</th>
                     <th>Description</th>
                     <th>Priority</th>
                     <th>Complete</th>
-                    <th></th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {todos.map((todo) => (
+                  {filteredTodos.map((todo) => (
                     <tr key={todo.id}>
-                      <td style={{display:"none"}}>{todo.id}</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          className="form-check-input custom-checkbox"
+                          checked={todo.complete}
+                          onChange={() => handleToggleComplete(todo.id)}
+                        />
+                      </td>
+                      <td style={{ display: "none" }}>{todo.id}</td>
                       <td>{todo.title}</td>
                       <td>{todo.description}</td>
                       <td>{todo.priority}</td>
                       <td>{todo.complete.toString()}</td>
                       <td>
-                        <button className="btn btn-ops btn-outline-success" onClick={() => handleEditTodo(todo.id, todo.title, todo.description, todo.priority, todo.complete.toString())}>
-                          <FontAwesomeIcon icon={faEdit} className="me-2" />
-                          Edit
-                        </button>
-
-                        <button className="btn btn-ops btn-outline-danger" onClick={() => handleDeleteTodo(todo.id)}>
-                          <FontAwesomeIcon icon={faTrash} className="me-2" />
-                          Delete
-                        </button>
+                        <FontAwesomeIcon icon={faEdit} className="btn btn-ops btn-outline-success me-2" onClick={() => handleEditTodo(todo.id, todo.title, todo.description, todo.priority, todo.complete.toString())} />
+                        <FontAwesomeIcon icon={faTrash} className="btn btn-ops btn-outline-danger me-2" onClick={() => handleDeleteTodo(todo.id)} />
                       </td>
                     </tr>
                   ))}
@@ -177,7 +221,12 @@ const UserPage = () => {
               </table>
             </div>
           ) : (
-            <p className="no-todos-message">No todos available.</p>
+            <div className="no-todos-message">
+              <FontAwesomeIcon icon={faFileAlt} size="2x" className="me-2" />
+              <p style={{ fontWeight: "bold" }}>No todos found.</p>
+              <p>get started by creating a new todo</p>
+              <button className="btn btn-primary me-2" onClick={() => setShowForm(true)}><FontAwesomeIcon icon={faPlus} className="me-2" />Create your first todo</button>
+            </div>
           )}
         </div>
       </main>
