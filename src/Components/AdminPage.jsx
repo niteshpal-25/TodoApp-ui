@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import CreateUserForm from "./CreateUserForm";
 import "../styles/AdminPage.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit,faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash, faUser, faListCheck, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 
 const AdminPage = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -12,37 +12,34 @@ const AdminPage = () => {
   const [users, setUsers] = useState([]);
   const [error, setError] = useState("");
   const [edituser, setedituser] = useState(null);
+  const [activeTab, setActiveTab] = useState("users");
 
-  // Fetch Todos and Users
   const fetchAdminData = async () => {
     try {
       const token = localStorage.getItem("token");
 
-      // Fetch Todos
-      const todosResponse = await fetch("http://127.0.0.1:8000/admin/all_todos", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-      });
+      const [todosRes, usersRes] = await Promise.all([
+        fetch("http://127.0.0.1:8000/admin/all_todos", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        }),
+        fetch("http://127.0.0.1:8000/admin/read_all_users/", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        }),
+      ]);
 
-      if (!todosResponse.ok) throw new Error("Failed to fetch todos");
-      const todosData = await todosResponse.json();
-      setTodos(todosData);
+      if (!todosRes.ok) throw new Error("Failed to fetch todos");
+      if (!usersRes.ok) throw new Error("Failed to fetch users");
 
-      // Fetch Users
-      const usersResponse = await fetch("http://127.0.0.1:8000/admin/read_all_users/", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-      });
-
-      if (!usersResponse.ok) throw new Error("Failed to fetch users");
-      const usersData = await usersResponse.json();
-      setUsers(usersData);
+      setTodos(await todosRes.json());
+      setUsers(await usersRes.json());
     } catch (err) {
       setError("Error fetching data. Please try again.");
       console.error(err);
@@ -50,65 +47,40 @@ const AdminPage = () => {
   };
 
   const handleDeleteTodo = async (id) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this todo?");
-    if (!confirmDelete) return;
+    if (!window.confirm("Are you sure you want to delete this todo?")) return;
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`http://127.0.0.1:8000/admin/todo/${id}/`, {
+      const res = await fetch(`http://127.0.0.1:8000/admin/todo/${id}/`, {
         method: "DELETE",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        },
+        headers: { "Authorization": `Bearer ${token}` },
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to delete todo");
-      }
-
+      if (!res.ok) throw new Error("Failed to delete todo");
       fetchAdminData();
-
-    } catch (error) {
-      setError("Error deleting todo. Please try again.");
-      console.error(error);
+    } catch (err) {
+      setError("Error deleting todo.");
+      console.error(err);
     }
-  }
-
-  const handleEdituser = (id, username,first_name,last_name, email, role) => {
-    setedituser({ id, username,first_name,last_name, email, role });
-    setShowForm(true);
   };
 
   const handleDeleteUser = async (id) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this user?");
-    if (!confirmDelete) return;
+    if (!window.confirm("Are you sure you want to delete this user?")) return;
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`http://127.0.0.1:8000/admin/user/${id}/`, {
+      const res = await fetch(`http://127.0.0.1:8000/admin/user/${id}/`, {
         method: "DELETE",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        },
+        headers: { "Authorization": `Bearer ${token}` },
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to delete user");
-      }
-
+      if (!res.ok) throw new Error("Failed to delete user");
       fetchAdminData();
-
-    } catch (error) {
-      setError("Error deleting user. Please try again.");
-      console.error(error);
+    } catch (err) {
+      setError("Error deleting user.");
+      console.error(err);
     }
-  }
+  };
 
-  useEffect(() => {
-    fetchAdminData();
-  }, []);
-
-  // Handle Logout
-  const handleProfileDetais = () => {
-    window.location.href = "/Profile";
+  const handleEdituser = (id, username, first_name, last_name, email, role) => {
+    setedituser({ id, username, first_name, last_name, email, role });
+    setShowForm(true);
   };
 
   const handleLogout = () => {
@@ -117,145 +89,136 @@ const AdminPage = () => {
     window.location.href = "/login";
   };
 
+  const handleProfileDetais = () => {
+    window.location.href = "/Profile";
+  };
+
+  useEffect(() => {
+    fetchAdminData();
+  }, []);
+
   return (
-    <div className="container-fluid">
-      {/* Header */}
-      <header className="d-flex justify-content-between align-items-center bg-dark text-white p-3 header">
-        <h2>Admin Dashboard</h2>
-        <div className="d-flex align-items-center">
-          <button className="btn btn-primary me-2" onClick={() => setShowForm(true)}>Create User</button>
-          <div className="position-relative">
-            <button
-              className="btn btn-secondary rounded-circle d-flex justify-content-center align-items-center"
-              style={{ width: "40px", height: "40px" }}
-              onClick={() => setShowMenu(!showMenu)}
-            >
-              {localStorage.getItem("username").substring(0, 1).toUpperCase()}
-            </button>
-            {showMenu && (
-              <div className="position-absolute bg-white text-dark p-3 rounded shadow-lg border" style={{ right: 10, top: "45px", minWidth: "160px" }}>
-                <button className="btn btn-light w-100 mb-2 text-primary fw-semibold d-flex align-items-center justify-content-center border rounded-pill shadow-sm"
-                  onClick={handleProfileDetais}>
-                  <i className="bi bi-person-circle me-2 fs-5 text-primary"></i> Profile
-                </button>
-                <button className="btn btn-light w-100 text-danger fw-semibold d-flex align-items-center justify-content-center border rounded-pill shadow-sm"
-                  onClick={handleLogout}>
-                  <i className="bi bi-box-arrow-right me-2 fs-5 text-danger"></i> Logout
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      </header>
+
+    <div className="d-flex" style={{ minHeight: "100vh" }}>
+      <div className="sidebar bg-dark text-white p-3">
+        <h4 className="text-white mb-4">Admin Panel</h4>
+        <nav className="nav flex-column">
+          <button className={`nav-link text-start btn ${activeTab === "users" ? "active-menu" : "text-white"}`} onClick={() => setActiveTab("users")}>
+            <FontAwesomeIcon icon={faUser} className="me-2" /> Users
+          </button>
+          <button className={`nav-link text-start btn ${activeTab === "todos" ? "active-menu" : "text-white"}`} onClick={() => setActiveTab("todos")}>
+            <FontAwesomeIcon icon={faListCheck} className="me-2" /> Todos
+          </button>
+          <button className="nav-link text-start btn text-white" onClick={() => setShowForm(true)}>
+            <FontAwesomeIcon icon={faUserPlus} className="me-2" /> Create User
+          </button>
+          <hr className="text-white" />
+          <button className="nav-link text-start btn text-white" onClick={handleProfileDetais}>
+            <i className="bi bi-person-circle me-2"></i> Profile
+          </button>
+          <button className="nav-link text-start btn text-white" onClick={handleLogout}>
+            <i className="bi bi-box-arrow-right me-2"></i> Logout
+          </button>
+        </nav>
+      </div>
 
       {/* Main Content */}
-      <main className="p-4">
-        {error && <p className="text-danger">{error}</p>}        
-        {/* {showForm && <CreateUserForm onClose={() => setShowForm(false)} />} */}
+      <div className="flex-grow-1 p-4">
+        <h2>{activeTab === "users" ? "List of Users" : "List of Todos"}</h2>
+        {error && <p className="text-danger">{error}</p>}
 
+        {/* Modal for Create/Edit User */}
         {showForm && (
           <>
-            {/* Backdrop */}
             <div className="modal-backdrop show" style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}></div>
-
-            {/* Modal */}
             <div className="modal show d-block" tabIndex="-1">
               <div className="modal-dialog modal-dialog-centered">
                 <div className="modal-content">
                   <CreateUserForm onClose={() => {
-                      setShowForm(false);
-                      setedituser(null); // Clear edit data on close
-                    }}
-                    initialData={edituser} />
+                    setShowForm(false);
+                    setedituser(null);
+                  }}
+                    initialData={edituser}
+                  />
                 </div>
               </div>
             </div>
           </>
         )}
 
-        {/* Users Table */}
-        <div className="mt-4 table-container">
-          <h4>Users</h4>
-          {users.length > 0 ? (
-            <div className="table-responsive scrollable-table" style={{maxHeight:"230px"}}>
+        {/* Users Tab */}
+        {activeTab === "users" && (
+          <div className="table-responsive mt-3 scrollable-table" style={{ maxHeight: "400px" }}>
+            {users.length > 0 ? (
               <table className="table table-bordered table-striped">
                 <thead className="table-dark">
                   <tr>
-                    <th style={{display:"none"}}>ID</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th></th>
+                    <th style={{textAlign:"center"}}>Username</th>
+                    <th style={{textAlign:"center"}}>Email</th>
+                    <th style={{textAlign:"center"}}>Role</th>
+                    <th style={{textAlign:"center"}}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {users.map((user) => (
                     <tr key={user.id}>
-                      <td style={{display:"none"}}>{user.id}</td>
                       <td>{user.username}</td>
                       <td>{user.email}</td>
                       <td>{user.role}</td>
-                      <td>
-                        <button className="btn btn-ops btn-outline-success" onClick={() => handleEdituser(user.id, user.username,user.first_name,user.last_name, user.email, user.role)}>
-                          <FontAwesomeIcon icon={faEdit} className="me-2" />
-                          Edit
-                        </button>
-
-                        <button className="btn btn-ops btn-outline-danger"  onClick={() => handleDeleteUser(user.id)}>
-                          <FontAwesomeIcon icon={faTrash} className="me-2" />
-                          Delete
-                        </button>
+                      <td style={{textAlign:"center"}}>
+                        <FontAwesomeIcon icon={faEdit} className="btn btn-ops btn-outline-success me-2" onClick={() => handleEdituser(user.id, user.username, user.first_name, user.last_name, user.email, user.role)} />
+                        <FontAwesomeIcon icon={faTrash} className="btn btn-ops btn-outline-danger me-2" onClick={() => handleDeleteUser(user.id)} />
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-            </div>
-          ) : (
-            <p className="no-todos-message">No users available.</p>
-          )}
-        </div>
+            ) : (
+              <div className="no-todos-message">
+                <FontAwesomeIcon icon={faUser} size="2x" className="me-2" />
+                <p style={{ fontWeight: "bold" }}>No user found.</p>
+                <p>get started by creating a new user</p>
+                <button className="btn btn-primary me-2" onClick={() => setShowForm(true)}><FontAwesomeIcon icon={faUser} className="me-2" />Create your first user</button>
+              </div>
+            )}
+          </div>
+        )}
 
-        {/* Todos Table */}
-        <div className="mt-4 table-container">
-          <h4>Todos</h4>
-          {todos.length > 0 ? (
-            <div className="table-responsive scrollable-table" style={{maxHeight:"230px"}}>
+        {/* Todos Tab */}
+        {activeTab === "todos" && (
+          <div className="table-responsive mt-3 scrollable-table" style={{ maxHeight: "400px" }}>
+            {todos.length > 0 ? (
               <table className="table table-bordered table-striped">
                 <thead className="table-dark">
                   <tr>
-                  <th style={{display:"none"}}>ID</th>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>Priority</th>
-                    <th>Complete</th>
-                    <th></th>
+                    <th style={{textAlign:"center"}}>Title</th>
+                    <th style={{textAlign:"center"}}>Description</th>
+                    <th style={{textAlign:"center"}}>Priority</th>
+                    <th style={{textAlign:"center"}}>Complete</th>
+                    <th style={{textAlign:"center"}}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {todos.map((todo) => (
                     <tr key={todo.id}>
-                      <td style={{display:"none"}}>{todo.id}</td>
                       <td>{todo.title}</td>
                       <td>{todo.description}</td>
                       <td>{todo.priority}</td>
                       <td>{todo.complete.toString()}</td>
-                      <td>
-                        <button className="btn btn-ops btn-outline-danger"  onClick={() => handleDeleteTodo(todo.id)}>
-                          <FontAwesomeIcon icon={faTrash} className="me-2" />
-                          Delete
-                        </button>
+                      <td style={{textAlign:"center"}}>
+                          <FontAwesomeIcon icon={faTrash} className="btn btn-ops btn-outline-danger me-2"
+                          onClick={() => handleDeleteTodo(todo.id)} />                        
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-            </div>
-          ) : (
-            <p className="no-todos-message">No todos available.</p>
-          )}
-        </div>
-      </main>
+            ) : (
+              <p>No todos available.</p>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

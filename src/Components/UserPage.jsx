@@ -186,13 +186,13 @@ const UserPage = () => {
               <table className="table table-striped">
                 <thead className="table-dark">
                   <tr>
-                    <th>Status</th>
+                    <th style={{textAlign:"center"}}>Status</th>
                     <th style={{ display: "none" }}>ID</th>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>Priority</th>
-                    <th>Complete</th>
-                    <th>Actions</th>
+                    <th style={{textAlign:"center"}}>Title</th>
+                    <th style={{textAlign:"center"}}>Description</th>
+                    <th style={{textAlign:"center"}}>Priority</th>
+                    <th style={{textAlign:"center"}}>Complete</th>
+                    <th style={{textAlign:"center"}}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>

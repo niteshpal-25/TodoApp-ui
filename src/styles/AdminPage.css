@@ -33,3 +33,19 @@
   border: 1px solid #ddd;
   margin-top: 2rem;
 }
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1050;
+}
+
+.btn-outline-light {
+  color: #fff;
+  border-color: #fff;
+}
+
+.btn-outline-light:hover {
+  background-color: #f8f9fa;
+  color: #000;
+}
