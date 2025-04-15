@@ -3,7 +3,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import CreateUserForm from "./CreateUserForm";
 import "../styles/AdminPage.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash, faUser, faListCheck, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash, faUser, faListCheck, faUserPlus, faPlus, faCalendar } from '@fortawesome/free-solid-svg-icons';
+import CalenderHoliday from "./CalenderHoliday";
 
 const AdminPage = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -83,6 +84,10 @@ const AdminPage = () => {
     setShowForm(true);
   };
 
+  const setCalenderForm=()=>{
+    window.location.href = "/calender";
+  }
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
@@ -112,18 +117,43 @@ const AdminPage = () => {
           <button className="nav-link text-start btn text-white" onClick={() => setShowForm(true)}>
             <FontAwesomeIcon icon={faUserPlus} className="me-2" /> Create User
           </button>
+          
+          <button className={`nav-link text-start btn text-white ${activeTab === "calender" ? "active-menu" : "text-white"}`} onClick={() => setCalenderForm(true)}>
+            <FontAwesomeIcon icon={faCalendar} className="me-2" /> Calender
+          </button>
           <hr className="text-white" />
           <button className="nav-link text-start btn text-white" onClick={handleProfileDetais}>
             <i className="bi bi-person-circle me-2"></i> Profile
-          </button>
-          <button className="nav-link text-start btn text-white" onClick={handleLogout}>
-            <i className="bi bi-box-arrow-right me-2"></i> Logout
-          </button>
+          </button>          
         </nav>
       </div>
 
       {/* Main Content */}
-      <div className="flex-grow-1 p-4">
+      <div className="flex-grow-1 p-4"> 
+      <header className="d-flex justify-content-between align-items-center bg-dark text-white p-2 header" style={{ position: "relative" }}>
+            <h2 className="mb-0"></h2>
+            <div className="d-flex align-items-center">
+              <div className="position-relative">
+                <button
+                  className="btn btn-secondary rounded-circle d-flex justify-content-center align-items-center"
+                  style={{ width: "40px", height: "40px" }}
+                  onClick={() => setShowMenu(!showMenu)}
+                >
+                  {localStorage.getItem("username").substring(0, 1).toUpperCase()}
+                </button>
+                {showMenu && (
+                  <div className="position-absolute bg-white text-dark p-3 rounded shadow-lg border" style={{ right: 10, top: "45px", minWidth: "160px" }}>
+                    <button
+                      className="btn btn-light w-100 text-danger fw-semibold d-flex align-items-center justify-content-center border rounded-pill shadow-sm"
+                      onClick={handleLogout}
+                    >
+                      <i className="bi bi-box-arrow-right me-2 fs-5 text-danger"></i> Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </header>    
         <h2>{activeTab === "users" ? "List of Users" : "List of Todos"}</h2>
         {error && <p className="text-danger">{error}</p>}
 
@@ -153,10 +183,10 @@ const AdminPage = () => {
               <table className="table table-bordered table-striped">
                 <thead className="table-dark">
                   <tr>
-                    <th style={{textAlign:"center"}}>Username</th>
-                    <th style={{textAlign:"center"}}>Email</th>
-                    <th style={{textAlign:"center"}}>Role</th>
-                    <th style={{textAlign:"center"}}>Actions</th>
+                    <th style={{ textAlign: "center" }}>Username</th>
+                    <th style={{ textAlign: "center" }}>Email</th>
+                    <th style={{ textAlign: "center" }}>Role</th>
+                    <th style={{ textAlign: "center" }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -165,7 +195,7 @@ const AdminPage = () => {
                       <td>{user.username}</td>
                       <td>{user.email}</td>
                       <td>{user.role}</td>
-                      <td style={{textAlign:"center"}}>
+                      <td style={{ textAlign: "center" }}>
                         <FontAwesomeIcon icon={faEdit} className="btn btn-ops btn-outline-success me-2" onClick={() => handleEdituser(user.id, user.username, user.first_name, user.last_name, user.email, user.role)} />
                         <FontAwesomeIcon icon={faTrash} className="btn btn-ops btn-outline-danger me-2" onClick={() => handleDeleteUser(user.id)} />
                       </td>
@@ -191,11 +221,11 @@ const AdminPage = () => {
               <table className="table table-bordered table-striped">
                 <thead className="table-dark">
                   <tr>
-                    <th style={{textAlign:"center"}}>Title</th>
-                    <th style={{textAlign:"center"}}>Description</th>
-                    <th style={{textAlign:"center"}}>Priority</th>
-                    <th style={{textAlign:"center"}}>Complete</th>
-                    <th style={{textAlign:"center"}}>Actions</th>
+                    <th style={{ textAlign: "center" }}>Title</th>
+                    <th style={{ textAlign: "center" }}>Description</th>
+                    <th style={{ textAlign: "center" }}>Priority</th>
+                    <th style={{ textAlign: "center" }}>Complete</th>
+                    <th style={{ textAlign: "center" }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -205,9 +235,9 @@ const AdminPage = () => {
                       <td>{todo.description}</td>
                       <td>{todo.priority}</td>
                       <td>{todo.complete.toString()}</td>
-                      <td style={{textAlign:"center"}}>
-                          <FontAwesomeIcon icon={faTrash} className="btn btn-ops btn-outline-danger me-2"
-                          onClick={() => handleDeleteTodo(todo.id)} />                        
+                      <td style={{ textAlign: "center" }}>
+                        <FontAwesomeIcon icon={faTrash} className="btn btn-ops btn-outline-danger me-2"
+                          onClick={() => handleDeleteTodo(todo.id)} />
                       </td>
                     </tr>
                   ))}
@@ -218,6 +248,13 @@ const AdminPage = () => {
             )}
           </div>
         )}
+
+
+        {activeTab === "calender" && (
+          <div className="table-responsive mt-3 scrollable-table" style={{ maxHeight: "400px" }}>
+            <CalenderHoliday></CalenderHoliday>
+          </div>
+        )}      
       </div>
     </div>
   );

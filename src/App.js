@@ -8,6 +8,7 @@ import SignUp from "./Components/SignUp";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import UserPage from "./Components/UserPage";
 import Profile from "./Components/Profile";
+import CalenderHoliday from "./Components/CalenderHoliday";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/Profile" element={<Profile />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/calender" element={<CalenderHoliday />} />
         
         {/* Protected Route */}
         <Route
