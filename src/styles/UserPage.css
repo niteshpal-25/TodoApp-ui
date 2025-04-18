@@ -13,10 +13,17 @@
   top: 0;
   background-color: #143658;
   z-index: 1;
+  border: 1px solid #ccc; /* Header borders */
+  color: white;
 }
 
 .scrollable-table tbody {
   display: table-row-group; /* Keep the default table structure */
+}
+
+.scrollable-table td {
+  border: 1px solid #ccc;
+  color: black;
 }
 
 .btn-ops{
