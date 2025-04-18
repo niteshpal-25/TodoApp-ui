@@ -84,10 +84,6 @@ const AdminPage = () => {
     setShowForm(true);
   };
 
-  const setCalenderForm=()=>{
-    window.location.href = "/calender";
-  }
-
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
@@ -114,17 +110,11 @@ const AdminPage = () => {
           <button className={`nav-link text-start btn ${activeTab === "todos" ? "active-menu" : "text-white"}`} onClick={() => setActiveTab("todos")}>
             <FontAwesomeIcon icon={faListCheck} className="me-2" /> Todos
           </button>
-          <button className="nav-link text-start btn text-white" onClick={() => setShowForm(true)}>
-            <FontAwesomeIcon icon={faUserPlus} className="me-2" /> Create User
-          </button>
           
-          <button className={`nav-link text-start btn text-white ${activeTab === "calender" ? "active-menu" : "text-white"}`} onClick={() => setCalenderForm(true)}>
-            <FontAwesomeIcon icon={faCalendar} className="me-2" /> Calender
+          <button className={`nav-link text-start btn ${activeTab === "calender" ? "active-menu" : "text-white"}`} onClick={() => setActiveTab("calender")}>
+            <FontAwesomeIcon icon={faCalendar} className="me-2" /> Calendar
           </button>
           <hr className="text-white" />
-          <button className="nav-link text-start btn text-white" onClick={handleProfileDetais}>
-            <i className="bi bi-person-circle me-2"></i> Profile
-          </button>          
         </nav>
       </div>
 
@@ -133,6 +123,7 @@ const AdminPage = () => {
       <header className="d-flex justify-content-between align-items-center bg-dark text-white p-2 header" style={{ position: "relative" }}>
             <h2 className="mb-0"></h2>
             <div className="d-flex align-items-center">
+              <button className="btn btn-primary me-2" onClick={() => setShowForm(true)}><FontAwesomeIcon icon={faPlus} className="me-2" />Create User</button>
               <div className="position-relative">
                 <button
                   className="btn btn-secondary rounded-circle d-flex justify-content-center align-items-center"
@@ -143,6 +134,10 @@ const AdminPage = () => {
                 </button>
                 {showMenu && (
                   <div className="position-absolute bg-white text-dark p-3 rounded shadow-lg border" style={{ right: 10, top: "45px", minWidth: "160px" }}>
+                    <button className="btn btn-light w-100 mb-2 text-primary fw-semibold d-flex align-items-center justify-content-center border rounded-pill shadow-sm"
+                      onClick={handleProfileDetais}>
+                      <i className="bi bi-person-circle me-2 fs-5 text-primary"></i> Profile
+                    </button>
                     <button
                       className="btn btn-light w-100 text-danger fw-semibold d-flex align-items-center justify-content-center border rounded-pill shadow-sm"
                       onClick={handleLogout}
@@ -154,7 +149,9 @@ const AdminPage = () => {
               </div>
             </div>
           </header>    
+        {(activeTab === "users" || activeTab === "todos") && (
         <h2>{activeTab === "users" ? "List of Users" : "List of Todos"}</h2>
+        )}
         {error && <p className="text-danger">{error}</p>}
 
         {/* Modal for Create/Edit User */}
@@ -251,8 +248,8 @@ const AdminPage = () => {
 
 
         {activeTab === "calender" && (
-          <div className="table-responsive mt-3 scrollable-table" style={{ maxHeight: "400px" }}>
-            <CalenderHoliday></CalenderHoliday>
+          <div className="mt-4 d-flex justify-content-center align-items-center">
+            <CalenderHoliday />
           </div>
         )}      
       </div>
