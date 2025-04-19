@@ -4,30 +4,7 @@ import '../styles/CalenderHoliday.css'
 function CalenderHoliday() {
   const [task, setTask] = useState("");
   const [date, setDate] = useState("");
-  // const [tasks, setTasks] = useState([]);
-  const [tasks, setTasks] = useState([
-    { task: "Buy groceries", date: "2025-04-15" },
-    { task: "Doctor appointment", date: "2025-04-18" },
-    { task: "Team meeting", date: "2025-04-20" },
-    { task: "Yoga class", date: "2025-04-22" },
-    { task: "Pay electricity bill", date: "2025-04-25" },
-    { task: "Weekend trip", date: "2025-04-27" },
-    { task: "Friend’s birthday", date: "2025-04-30" },
-    { task: "Submit project report", date: "2025-02-05" },
-    { task: "Parent-teacher meeting", date: "2025-02-08" },
-    { task: "Dinner with friends", date: "2025-02-12" },
-    { task: "Valentine's Day", date: "2025-02-14" },
-    { task: "Monthly review meeting", date: "2025-02-20" },
-    { task: "Car service appointment", date: "2025-02-23" },
-    { task: "Book club session", date: "2025-02-28" },
-    { task: "Team building event", date: "2025-03-03" },
-    { task: "Dentist appointment", date: "2025-03-07" },
-    { task: "Buy new laptop", date: "2025-03-10" },
-    { task: "Friend’s wedding", date: "2025-03-15" },
-    { task: "Pay rent", date: "2025-03-01" },
-    { task: "Client presentation", date: "2025-03-21" },
-    { task: "Go hiking", date: "2025-03-30" },
-  ]);
+  const [tasks, setTasks] = useState([]);
   const [monthOffset, setMonthOffset] = useState(0); // 0 = current month
 
   const addTask = (e) => {
@@ -60,7 +37,7 @@ function CalenderHoliday() {
 
   return (
     <div className="app">
-      <h2>{getMonthYear(monthOffset)}</h2>    
+      <h2>{getMonthYear(monthOffset)}</h2>
       <div className="controls">
         <button onClick={goToPreviousMonth}>Prev</button>
         <button onClick={goToNextMonth}>Next</button>
@@ -78,8 +55,28 @@ const generateCalendar = (tasks, monthOffset) => {
   const year = today.getFullYear() + Math.floor(currentMonth / 12);
   const month = ((currentMonth % 12) + 12) % 12; // Always get positive month
   const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const firstDayOfMonth = new Date(year, month, 1).getDay();
 
   let calendar = [];
+
+  // Add weekday headers
+  const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  calendar.push(
+    <div className="weekday-header" key="weekdays">
+      {weekdays.map((day, index) => (
+        <div className="weekday" key={index}>
+          {day}
+        </div>
+      ))}
+    </div>
+  );
+
+  // Add empty cells for days before the 1st of the month
+  for (let i = 0; i < firstDayOfMonth; i++) {
+    calendar.push(<div className="day empty" key={`empty-${i}`}></div>);
+  }
+
+  // Add days of the month
   for (let day = 1; day <= daysInMonth; day++) {
     const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(
       day
@@ -90,11 +87,15 @@ const generateCalendar = (tasks, monthOffset) => {
       <div className="day" key={day}>
         <div className="date">{day}</div>
         <div className="tasks">
-          {dayTasks.map((t, index) => (
-            <div key={index} className="task">
-              {t.task}
-            </div>
-          ))}
+          {dayTasks.length > 0 ? (
+            dayTasks.map((t, index) => (
+              <div key={index} className="task">
+                {t.task}
+              </div>
+            ))
+          ) : (
+            <div className="no-tasks">No tasks</div>
+          )}
         </div>
       </div>
     );
