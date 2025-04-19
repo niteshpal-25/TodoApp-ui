@@ -6,7 +6,7 @@ const CreateTodoForm = ({ onClose, initialData }) => {
     title: "",
     description: "",
     priority: "Low",
-    complete: false,
+    status: "Pending", // Default to match Enum
     ...initialData,
   });
   const [error, setError] = useState("");
@@ -22,10 +22,10 @@ const CreateTodoForm = ({ onClose, initialData }) => {
   useEffect(() => {
     if (initialData) {
       setFormData({
-        title: initialData.title,
-        description: initialData.description,
-        priority: initialData.priority,
-        complete: initialData.complete === "true" || initialData.complete === true
+        title: initialData.title || "",
+        description: initialData.description || "",
+        priority: initialData.priority || "Low", // Fallback to valid priority
+        status: initialData.status || "Pending", // Fallback to valid status
       });
     }
   }, [initialData]);
@@ -38,9 +38,16 @@ const CreateTodoForm = ({ onClose, initialData }) => {
     if (!validPriorities.includes(formData.priority)) {
       setError("Priority must be one of: Low, Medium, High.");
       return;
-    }else{
-      setError("")
     }
+
+    // Validate status
+    const validStatuses = ["Pending", "Completed"];
+    if (!validStatuses.includes(formData.status)) {
+      setError("Status must be one of: Pending, Completed.");
+      return;
+    }
+
+    setError("");
 
     try {
       const token = localStorage.getItem("token");
@@ -60,18 +67,16 @@ const CreateTodoForm = ({ onClose, initialData }) => {
       const data = await response.json();
       if (response.ok) {
         alert(`To Do ${initialData?.id ? "updated" : "created"} successfully.`);
-        onClose(); // close modal
+        onClose(); // Close modal
       } else {
         console.error("Validation Error:", data);
         setError(data.message || "Error while saving To Do.");
       }
-
     } catch (error) {
       console.error("Request Error:", error);
       setError("Unexpected error occurred.");
     }
   };
-
 
   return (
     <div className="modal-overlay d-flex justify-content-center align-items-center">
@@ -86,7 +91,8 @@ const CreateTodoForm = ({ onClose, initialData }) => {
               placeholder="Title"
               name="title"
               value={formData.title}
-              onChange={handleChange} required
+              onChange={handleChange}
+              required
             />
           </div>
 
@@ -97,7 +103,8 @@ const CreateTodoForm = ({ onClose, initialData }) => {
               placeholder="Description"
               name="description"
               value={formData.description}
-              onChange={handleChange} required
+              onChange={handleChange}
+              required
             />
           </div>
 
@@ -118,12 +125,13 @@ const CreateTodoForm = ({ onClose, initialData }) => {
           <div className="mb-3">
             <select
               className="form-control text-center"
-              name="complete"
-              value={formData.complete}
+              name="status"
+              value={formData.status}
               onChange={handleChange}
+              required
             >
-              <option value={false}>False</option>
-              <option value={true}>True</option>
+              <option value="Pending">Pending</option>
+              <option value="Completed">Completed</option>
             </select>
           </div>
 

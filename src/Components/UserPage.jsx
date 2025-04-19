@@ -55,8 +55,8 @@ const UserPage = () => {
     window.location.href = "/Profile";
   };
 
-  const handleEditTodo = (id, title, description, priority, complete) => {
-    setEditTodo({ id, title, description, priority, complete });
+  const handleEditTodo = (id, title, description, priority, status) => {
+    setEditTodo({ id, title, description, priority, status });
     setShowForm(true);
   };
 
@@ -91,7 +91,7 @@ const UserPage = () => {
 
   const handleToggleComplete = (id) => {
     const updatedTodos = todos.map(todo =>
-      todo.id === id ? { ...todo, complete: !todo.complete } : todo
+      todo.id === id ? { ...todo, status: !todo.status } : todo
     );
     setTodos(updatedTodos);
   };
@@ -192,7 +192,7 @@ const UserPage = () => {
                     <th style={{textAlign:"center"}}>Title</th>
                     <th style={{textAlign:"center"}}>Description</th>
                     <th style={{textAlign:"center"}}>Priority</th>
-                    <th style={{textAlign:"center"}}>Complete</th>
+                    <th style={{textAlign:"center"}}>Status</th>
                     <th style={{textAlign:"center"}}>Actions</th>
                   </tr>
                 </thead>
@@ -203,7 +203,7 @@ const UserPage = () => {
                         <input
                           type="checkbox"
                           className="form-check-input custom-checkbox"
-                          checked={todo.complete}
+                          checked={todo.status}
                           onChange={() => handleToggleComplete(todo.id)}
                         />
                       </td>
@@ -211,9 +211,9 @@ const UserPage = () => {
                       <td>{todo.title}</td>
                       <td>{todo.description}</td>
                       <td>{todo.priority}</td>
-                      <td>{todo.complete.toString()}</td>
+                      <td>{todo.status}</td>
                       <td>
-                        <FontAwesomeIcon icon={faEdit} className="btn btn-ops btn-outline-success me-2" onClick={() => handleEditTodo(todo.id, todo.title, todo.description, todo.priority, todo.complete.toString())} />
+                        <FontAwesomeIcon icon={faEdit} className="btn btn-ops btn-outline-success me-2" onClick={() => handleEditTodo(todo.id, todo.title, todo.description, todo.priority, todo.status)} />
                         <FontAwesomeIcon icon={faTrash} className="btn btn-ops btn-outline-danger me-2" onClick={() => handleDeleteTodo(todo.id)} />
                       </td>
                     </tr>
