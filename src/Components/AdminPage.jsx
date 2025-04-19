@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import CreateUserForm from "./CreateUserForm";
 import "../styles/AdminPage.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash, faUser, faListCheck, faUserPlus, faPlus, faCalendar } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash, faUser, faListCheck, faPlus, faCalendar } from '@fortawesome/free-solid-svg-icons';
 import CalenderHoliday from "./CalenderHoliday";
 
 const AdminPage = () => {
@@ -78,6 +78,11 @@ const AdminPage = () => {
       console.error(err);
     }
   };
+
+  const formatToSeconds = (isoString) => {
+    const date = new Date(isoString);
+    return date.toISOString().split('.')[0];
+  }
 
   const handleEdituser = (id, username, first_name, last_name, email, role) => {
     setedituser({ id, username, first_name, last_name, email, role });
@@ -181,6 +186,8 @@ const AdminPage = () => {
                 <thead className="table-dark">
                   <tr>
                     <th style={{ textAlign: "center" }}>Username</th>
+                    <th style={{ textAlign: "center" }}>FirstName</th>
+                    <th style={{ textAlign: "center" }}>LastName</th>
                     <th style={{ textAlign: "center" }}>Email</th>
                     <th style={{ textAlign: "center" }}>Role</th>
                     <th style={{ textAlign: "center" }}>Actions</th>
@@ -190,6 +197,8 @@ const AdminPage = () => {
                   {users.map((user) => (
                     <tr key={user.id}>
                       <td>{user.username}</td>
+                      <td>{user.first_name}</td>
+                      <td>{user.last_name}</td>
                       <td>{user.email}</td>
                       <td>{user.role}</td>
                       <td style={{ textAlign: "center" }}>
@@ -221,7 +230,9 @@ const AdminPage = () => {
                     <th style={{ textAlign: "center" }}>Title</th>
                     <th style={{ textAlign: "center" }}>Description</th>
                     <th style={{ textAlign: "center" }}>Priority</th>
-                    <th style={{ textAlign: "center" }}>Complete</th>
+                    <th style={{ textAlign: "center" }}>Status</th>
+                    <th style={{ textAlign: "center" }}>Created</th>
+                    <th style={{ textAlign: "center" }}>Updated</th>
                     <th style={{ textAlign: "center" }}>Actions</th>
                   </tr>
                 </thead>
@@ -231,7 +242,9 @@ const AdminPage = () => {
                       <td>{todo.title}</td>
                       <td>{todo.description}</td>
                       <td>{todo.priority}</td>
-                      <td>{todo.complete.toString()}</td>
+                      <td>{todo.status}</td>
+                      <td>{formatToSeconds(todo.created_at)}</td>
+                      <td>{formatToSeconds(todo.updated_at)}</td>
                       <td style={{ textAlign: "center" }}>
                         <FontAwesomeIcon icon={faTrash} className="btn btn-ops btn-outline-danger me-2"
                           onClick={() => handleDeleteTodo(todo.id)} />

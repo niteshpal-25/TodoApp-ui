@@ -1,26 +1,50 @@
-import React, { useState } from "react";
-import '../styles/CalenderHoliday.css'
+import React, { useState, useEffect } from "react";
+import '../styles/CalenderHoliday.css';
 
 function CalenderHoliday() {
-  const [task, setTask] = useState("");
-  const [date, setDate] = useState("");
-  const [tasks, setTasks] = useState([]);
+  const [todos, setTodos] = useState([]);
   const [monthOffset, setMonthOffset] = useState(0); // 0 = current month
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const addTask = (e) => {
-    e.preventDefault();
-    if (task && date) {
-      setTasks([...tasks, { task, date }]);
-      setTask("");
-      setDate("");
-    }
-  };
+  // Fetch todos from the backend when the component mounts
+  useEffect(() => {
+    const fetchTodos = async () => {
+      try {
+        const token = localStorage.getItem('token'); // Replace with your token retrieval method
+        if (!token) {
+          throw new Error('No authentication token found');
+        }
+
+        const response = await fetch("http://127.0.0.1:8000/admin/all_todos", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch todos: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        setTodos(data); // Assuming data is an array of { id, title, created_at, ... }
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchTodos();
+  }, []);
 
   const getMonthYear = (offset) => {
     const today = new Date();
     const currentMonth = today.getMonth() + offset;
     const year = today.getFullYear() + Math.floor(currentMonth / 12);
-    const month = ((currentMonth % 12) + 12) % 12; // Ensures positive month
+    const month = ((currentMonth % 12) + 12) % 12;
     const monthName = new Date(year, month).toLocaleString("default", {
       month: "long",
     });
@@ -35,6 +59,9 @@ function CalenderHoliday() {
     setMonthOffset(monthOffset - 1);
   };
 
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
   return (
     <div className="app">
       <h2>{getMonthYear(monthOffset)}</h2>
@@ -42,18 +69,16 @@ function CalenderHoliday() {
         <button onClick={goToPreviousMonth}>Prev</button>
         <button onClick={goToNextMonth}>Next</button>
       </div>
-
-      <div className="calendar">{generateCalendar(tasks, monthOffset)}</div>
+      <div className="calendar">{generateCalendar(todos, monthOffset)}</div>
     </div>
   );
 }
 
-// Modified to accept monthOffset
-const generateCalendar = (tasks, monthOffset) => {
+const generateCalendar = (todos, monthOffset) => {
   const today = new Date();
   const currentMonth = today.getMonth() + monthOffset;
   const year = today.getFullYear() + Math.floor(currentMonth / 12);
-  const month = ((currentMonth % 12) + 12) % 12; // Always get positive month
+  const month = ((currentMonth % 12) + 12) % 12;
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const firstDayOfMonth = new Date(year, month, 1).getDay();
 
@@ -78,23 +103,25 @@ const generateCalendar = (tasks, monthOffset) => {
 
   // Add days of the month
   for (let day = 1; day <= daysInMonth; day++) {
-    const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(
-      day
-    ).padStart(2, "0")}`;
-    const dayTasks = tasks.filter((t) => t.date === dateStr);
+    const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    // Filter todos for the current day based on created_at
+    const dayTodos = todos.filter((todo) => {
+      const todoDate = new Date(todo.created_at).toISOString().split('T')[0];
+      return todoDate === dateStr;
+    });
 
     calendar.push(
       <div className="day" key={day}>
         <div className="date">{day}</div>
         <div className="tasks">
-          {dayTasks.length > 0 ? (
-            dayTasks.map((t, index) => (
+          {dayTodos.length > 0 ? (
+            dayTodos.map((todo, index) => (
               <div key={index} className="task">
-                {t.task}
+                {todo.title}
               </div>
             ))
           ) : (
-            <div className="no-tasks">No tasks</div>
+            <div className="no-tasks">No todos</div>
           )}
         </div>
       </div>
