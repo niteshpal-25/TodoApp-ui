@@ -5,7 +5,7 @@ const CreateTodoForm = ({ onClose, initialData }) => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    priority: 0,
+    priority: "Low",
     complete: false,
     ...initialData,
   });
@@ -33,9 +33,10 @@ const CreateTodoForm = ({ onClose, initialData }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const priorityValue = Number(formData.priority);
-    if (priorityValue <= 0 || priorityValue >= 5) {
-      setError("Priority must be greater than 0 or less than 5.");
+    // Validate priority
+    const validPriorities = ["Low", "Medium", "High"];
+    if (!validPriorities.includes(formData.priority)) {
+      setError("Priority must be one of: Low, Medium, High.");
       return;
     }else{
       setError("")
@@ -101,14 +102,17 @@ const CreateTodoForm = ({ onClose, initialData }) => {
           </div>
 
           <div className="mb-3">
-            <input
-              type="number"
+            <select
               className="form-control text-center"
-              placeholder="Priority"
               name="priority"
               value={formData.priority}
               onChange={handleChange}
-            />
+              required
+            >
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+            </select>
           </div>
 
           <div className="mb-3">
