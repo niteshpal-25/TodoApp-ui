@@ -71,12 +71,16 @@ const Chatbot = () => {
         const d = data.details;
         botMessage = `Deleted todo: ${d.title}`;
       }
+      if (data.response) {
+        botMessage = data.response;
+      }
+      console.log(botMessage)
       setChatMessages([...newMessages, { sender: "bot", text: botMessage }]);
     } catch (err) {
       setError(`Error: ${err.message}`);
       setChatMessages([
         ...newMessages,
-        { sender: "bot", text: "Sorry, something went wrong. Try again later." },
+        { sender: "bot", text: "Sorry, todo not found. Try again with the correct case-sensitive title." },
       ]);
       console.error(err);
     }
