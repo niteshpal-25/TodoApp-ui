@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/UserPage.css";
 import CreateTodoForm from "./CreateTodoForm";
+import Chatbot from "./Chatbot";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faPlus, faToggleOff, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { faFileAlt } from "@fortawesome/free-solid-svg-icons/faFileAlt";
-import { faSearch } from "@fortawesome/free-solid-svg-icons/faSearch";
+import { faEdit, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faFileAlt, faSearch } from "@fortawesome/free-solid-svg-icons";
 
 const UserPage = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -77,12 +77,11 @@ const UserPage = () => {
       }
 
       fetchTodos();
-
     } catch (error) {
       setError("Error deleting todo. Please try again.");
       console.error(error);
     }
-  }
+  };
 
   const filteredTodos = todos.filter(todo =>
     todo.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -105,23 +104,29 @@ const UserPage = () => {
         <h2>Todo App</h2>
         
         <div className="d-flex align-items-center">
-          <button className="btn btn-primary me-2" onClick={() => setShowForm(true)}><FontAwesomeIcon icon={faPlus} className="me-2" />Create Todo</button>
+          <button className="btn btn-primary me-2" onClick={() => setShowForm(true)}>
+            <FontAwesomeIcon icon={faPlus} className="me-2" />Create Todo
+          </button>
           <div className="position-relative">
             <button
               className="btn btn-secondary rounded-circle d-flex justify-content-center align-items-center"
               style={{ width: "40px", height: "40px" }}
               onClick={() => setShowMenu(!showMenu)}
             >
-              {localStorage.getItem("username").substring(0, 1).toUpperCase()}
+              {localStorage.getItem("username")?.substring(0, 1).toUpperCase() || "?"}
             </button>
             {showMenu && (
               <div className="position-absolute bg-white text-dark p-3 rounded shadow-lg border" style={{ right: 10, top: "45px", minWidth: "160px" }}>
-                <button className="btn btn-light w-100 mb-2 text-primary fw-semibold d-flex align-items-center justify-content-center border rounded-pill shadow-sm"
-                  onClick={handleProfileDetais}>
+                <button
+                  className="btn btn-light w-100 mb-2 text-primary fw-semibold d-flex align-items-center justify-content-center border rounded-pill shadow-sm"
+                  onClick={handleProfileDetais}
+                >
                   <i className="bi bi-person-circle me-2 fs-5 text-primary"></i> Profile
                 </button>
-                <button className="btn btn-light w-100 text-danger fw-semibold d-flex align-items-center justify-content-center border rounded-pill shadow-sm"
-                  onClick={handleLogout}>
+                <button
+                  className="btn btn-light w-100 text-danger fw-semibold d-flex align-items-center justify-content-center border rounded-pill shadow-sm"
+                  onClick={handleLogout}
+                >
                   <i className="bi bi-box-arrow-right me-2 fs-5 text-danger"></i> Logout
                 </button>
               </div>
@@ -213,8 +218,16 @@ const UserPage = () => {
                       <td>{todo.priority}</td>
                       <td>{todo.status}</td>
                       <td>
-                        <FontAwesomeIcon icon={faEdit} className="btn btn-ops btn-outline-success me-2" onClick={() => handleEditTodo(todo.id, todo.title, todo.description, todo.priority, todo.status)} />
-                        <FontAwesomeIcon icon={faTrash} className="btn btn-ops btn-outline-danger me-2" onClick={() => handleDeleteTodo(todo.id)} />
+                        <FontAwesomeIcon
+                          icon={faEdit}
+                          className="btn btn-ops btn-outline-success me-2"
+                          onClick={() => handleEditTodo(todo.id, todo.title, todo.description, todo.priority, todo.status)}
+                        />
+                        <FontAwesomeIcon
+                          icon={faTrash}
+                          className="btn btn-ops btn-outline-danger me-2"
+                          onClick={() => handleDeleteTodo(todo.id)}
+                        />
                       </td>
                     </tr>
                   ))}
@@ -226,11 +239,14 @@ const UserPage = () => {
               <FontAwesomeIcon icon={faFileAlt} size="2x" className="me-2" />
               <p style={{ fontWeight: "bold" }}>No todos found.</p>
               <p>get started by creating a new todo</p>
-              <button className="btn btn-primary me-2" onClick={() => setShowForm(true)}><FontAwesomeIcon icon={faPlus} className="me-2" />Create your first todo</button>
+              <button className="btn btn-primary me-2" onClick={() => setShowForm(true)}>
+                <FontAwesomeIcon icon={faPlus} className="me-2" />Create your first todo
+              </button>
             </div>
           )}
         </div>
       </main>
+      <Chatbot />
     </div>
   );
 };
